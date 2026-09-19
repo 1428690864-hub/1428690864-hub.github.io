@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a14">
+<title>第七感知道</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a14;--card:#16162a;--card2:#1d1d38;
+  --gold:#d4af37;--gold2:#f0d97a;
+  --text:#e8e8f0;--muted:#8888a0;--border:#26264a;
+  --green:#4caf7d;--red:#e05a5a;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:#0a0a14;
+  background-image:
+    radial-gradient(ellipse at 15% 0%,rgba(90,70,160,.25) 0%,transparent 50%),
+    radial-gradient(ellipse at 85% 100%,rgba(180,140,60,.14) 0%,transparent 50%),
+    radial-gradient(1px 1px at 15% 25%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1px 1px at 62% 68%,rgba(255,255,255,.4),transparent),
+    radial-gradient(1px 1px at 82% 18%,rgba(255,255,255,.5),transparent),
+    radial-gradient(1px 1px at 38% 88%,rgba(255,255,255,.3),transparent),
+    radial-gradient(1px 1px at 92% 52%,rgba(255,255,255,.4),transparent);
+  color:var(--text);
+  min-height:100vh;
+  padding-bottom:calc(70px + env(safe-area-inset-bottom));
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,20,.85);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:14px 16px;text-align:center;
+}
+.top-bar h1{
+  font-size:17px;font-weight:600;letter-spacing:6px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold),#a8862a);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+#app{padding:16px;max-width:960px;margin:0 auto;min-height:calc(100vh - 150px)}
+.tab-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;
+  background:rgba(16,16,30,.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 0 6px;background:none;border:none;color:var(--muted);
+  font-size:10.5px;cursor:pointer;transition:color .2s;
+  min-height:54px;font-family:inherit;
+}
+.tab .ico{font-size:18px;margin-bottom:2px;transition:transform .2s}
+.tab.active{color:var(--gold)}
+.tab.active .ico{transform:translateY(-1px) scale(1.08)}
+h2.sec{font-size:15px;color:var(--gold);margin:22px 0 12px;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+h2.sec::before{content:"";width:3px;height:14px;background:linear-gradient(var(--gold2),var(--gold));border-radius:2px}
+.muted{color:var(--muted);font-size:13px;line-height:1.7}
+.card{
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:14px;padding:16px;
+  transition:border-color .2s,transform .1s;
+}
+.card:active{transform:scale(.985)}
+.search{
+  width:100%;padding:12px 16px;border-radius:12px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);font-size:14px;outline:none;font-family:inherit;
+  transition:border-color .2s;
+}
+.search:focus{border-color:var(--gold)}
+.search::placeholder{color:#55556e}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:12.5px;
+  background:var(--card);border:1px solid var(--border);color:var(--muted);
+  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;
+}
+.chip.active{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#0a0a14;border-color:transparent;font-weight:600}
+.card-list{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.card-list{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.card-list{grid-template-columns:repeat(3,1fr)}}
+.card-item{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:12px;cursor:pointer;
+  transition:border-color .2s,transform .1s;
+}
+.card-item:active{transform:scale(.98);border-color:var(--gold)}
+.card-thumb{
+  width:44px;height:62px;flex-shrink:0;border-radius:7px;
+  background:linear-gradient(150deg,#252547,#15152b);
+  border:1px solid rgba(212,175,55,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.card-meta{flex:1;min-width:0}
+.card-meta h3{font-size:14px;color:var(--gold);margin-bottom:4px;font-weight:600}
+.card-meta p{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.big-card{
+  aspect-ratio:3/5;max-width:220px;margin:0 auto 20px;
+  background:linear-gradient(150deg,#252547,#15152b);
+  border:1.5px solid rgba(212,175,55,.5);border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;box-shadow:0 8px 32px rgba(212,175,55,.15),inset 0 0 40px rgba(90,70,160,.15);
+  position:relative;overflow:hidden;
+}
+.big-card::before{
+  content:"";position:absolute;inset:8px;border:1px solid rgba(212,175,55,.2);border-radius:10px;pointer-events:none;
+}
+.big-card .sym{font-size:52px}
+.big-card .nm{font-size:17px;color:var(--gold);letter-spacing:3px;font-weight:600}
+.big-card .en{font-size:11px;color:var(--muted);letter-spacing:1px}
+.ori-switch{display:flex;gap:8px;margin-bottom:16px}
+.ori-btn{
+  flex:1;padding:11px;border-radius:10px;border:1px solid var(--border);
+  background:var(--card);color:var(--muted);font-size:13.5px;
+  cursor:pointer;transition:all .2s;font-family:inherit;font-weight:500;
+}
+.ori-btn.active{
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#0a0a14;border-color:transparent;font-weight:600;
+  box-shadow:0 4px 16px rgba(212,175,55,.3);
+}
+.detail-row{
+  display:flex;gap:10px;padding:11px 0;border-bottom:1px solid rgba(42,42,74,.6);
+  font-size:13.5px;line-height:1.65;
+}
+.detail-row:last-child{border-bottom:none}
+.detail-row .lbl{color:var(--gold);flex-shrink:0;width:44px;font-weight:500}
+.detail-row .val{color:var(--text);flex:1}
+.btn{
+  padding:11px 20px;border-radius:10px;border:none;font-size:13.5px;
+  cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s;
+}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#0a0a14}
+.btn-ghost{background:var(--card);border:1px solid var(--border);color:var(--text)}
+.option{
+  display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  color:var(--text);font-size:13.5px;cursor:pointer;font-family:inherit;
+  transition:all .2s;line-height:1.5;
+}
+.option:active{transform:scale(.99)}
+.option.correct{background:rgba(76,175,125,.15);border-color:var(--green);color:#9ee8c0}
+.option.wrong{background:rgba(224,90,90,.15);border-color:var(--red);color:#f0a0a0}
+.option .key{color:var(--gold);font-weight:700;margin-right:8px}
+.explain{
+  background:linear-gradient(145deg,rgba(212,175,55,.08),rgba(139,122,184,.06));
+  border:1px solid rgba(212,175,55,.3);border-radius:14px;
+  padding:16px;margin-top:16px;animation:fadeIn .35s ease;
+}
+.explain h4{color:var(--gold);font-size:13.5px;margin-bottom:10px;letter-spacing:1px}
+.explain p{font-size:13px;line-height:1.8;color:#d0d0e0;margin-bottom:8px}
+.explain p:last-child{margin-bottom:0}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .5s}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.stat{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:14px 8px;text-align:center;
+}
+.stat .num{font-size:20px;color:var(--gold);font-weight:700;letter-spacing:1px}
+.stat .lb{font-size:11px;color:var(--muted);margin-top:4px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.entry{
+  padding:16px 8px;text-align:center;border-radius:12px;
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);cursor:pointer;transition:border-color .2s,transform .1s;
+}
+.entry:active{transform:scale(.96);border-color:var(--gold)}
+.entry .sym{font-size:22px;display:block;margin-bottom:6px}
+.entry .nm{font-size:12px;color:var(--muted)}
+.empty{text-align:center;padding:48px 20px;color:var(--muted);font-size:13.5px;line-height:1.8}
+.empty .sym{font-size:40px;display:block;margin-bottom:12px;opacity:.5}
+.note-item{
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:12px;padding:15px;
+  margin-bottom:10px;cursor:pointer;transition:border-color .2s,transform .1s;
+}
+.note-item:active{transform:scale(.985);border-color:var(--gold)}
+.note-item h3{font-size:14px;color:var(--gold);margin-bottom:6px}
+.note-item .date{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.note-item .preview{font-size:12.5px;color:#aaaac0;line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tag{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;background:rgba(212,175,55,.12);color:var(--gold);border:1px solid rgba(212,175,55,.25);margin-right:6px;margin-top:6px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12.5px;color:var(--gold);margin-bottom:7px;letter-spacing:.5px}
+.field input,.field textarea,.field select{
+  width:100%;padding:11px 14px;border-radius:10px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--text);font-size:13.5px;outline:none;font-family:inherit;
+  transition:border-color .2s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6}
+#toast{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);
+  background:rgba(30,30,50,.95);border:1px solid var(--gold);
+  color:var(--gold);padding:12px 24px;border-radius:12px;font-size:13.5px;
+  z-index:9999;opacity:0;pointer-events:none;transition:all .25s;
+  backdrop-filter:blur(10px);white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.back{
+  display:inline-flex;align-items:center;gap:5px;padding:8px 0;
+  color:var(--gold);font-size:13.5px;cursor:pointer;background:none;
+  border:none;font-family:inherit;margin-bottom:8px;
+}
+.spread-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.mini-card{
+  width:52px;height:74px;border-radius:7px;flex-shrink:0;
+  background:linear-gradient(150deg,#252547,#15152b);
+  border:1px solid rgba(212,175,55,.35);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:9.5px;color:var(--muted);text-align:center;padding:2px;line-height:1.25;
+}
+.mini-card .pos{font-size:9px;color:var(--gold);margin-bottom:2px}
+.mini-card.rev{transform:rotate(180deg)}
+.mini-card.rev .pos{transform:rotate(180deg)}
+</style>
+</head>
+<body>
+
+<header class="top-bar"><h1>第七感知道</h1></header>
+<div id="app"></div>
+
+<nav class="tab-bar" id="tabbar">
+  <button class="tab active" data-page="home"><span class="ico">✦</span>首页</button>
+  <button class="tab" data-page="cards"><span class="ico">◈</span>牌库</button>
+  <button class="tab" data-page="cases"><span class="ico">❖</span>案例</button>
+  <button class="tab" data-page="notes"><span class="ico">✎</span>笔记</button>
+  <button class="tab" data-page="mine"><span class="ico">☾</span>我的</button>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   一、大阿卡纳数据（22张）
+   ============================================================ */
+const MAJOR = [
+{id:0,name:"愚人",en:"The Fool",sym:"🃏",kw:["开始","冒险","自由","天真"],
+ up:{g:"新的开始，冒险，天真，自由",l:"新恋情，轻松自在",c:"新机会，大胆尝试",f:"财务新起点",h:"活力充沛",s:"灵性探索"},
+ rv:{g:"鲁莽，逃避，犹豫不决",l:"感情不稳定",c:"计划不周，冲动",f:"财务风险",h:"精力不足",s:"迷失方向"},
+ adv:"保持开放，但也要看路。",his:"愚人代表旅程的起点，象征纯粹的可能性与信任。"},
+{id:1,name:"魔术师",en:"The Magician",sym:"🎩",kw:["创造","行动","能力"],
+ up:{g:"创造力，行动力，掌握资源",l:"主动出击",c:"能力展现，项目启动",f:"财源开启",h:"精力旺盛",s:"意志显化"},
+ rv:{g:"拖延，能力未发挥",l:"沟通不畅",c:"计划受阻",f:"资金链紧张",h:"精力分散",s:"自我怀疑"},
+ adv:"你已经拥有需要的工具。",his:"魔术师桌上摆着四元素，代表意志可以调动一切资源。"},
+{id:2,name:"女祭司",en:"The High Priestess",sym:"🌙",kw:["直觉","潜意识","智慧"],
+ up:{g:"直觉，潜意识，内在智慧",l:"精神连接，默默观察",c:"需要耐心等待",f:"保守为宜",h:"关注身心信号",s:"灵性觉醒"},
+ rv:{g:"忽视直觉，秘密，混乱",l:"隐藏的心事",c:"信息不透明",f:"财务隐瞒",h:"情绪压抑",s:"迷失内在"},
+ adv:"安静下来，答案在内心。",his:"女祭司坐在黑白双柱之间，守护着未显化的智慧。"},
+{id:3,name:"皇后",en:"The Empress",sym:"👑",kw:["丰盛","滋养","母性"],
+ up:{g:"丰盛，滋养，创造力",l:"温暖的关系",c:"创意丰收",f:"财务宽裕",h:"身心滋养",s:"与自然连接"},
+ rv:{g:"依赖，过度付出，停滞",l:"关系失衡",c:"创意枯竭",f:"挥霍",h:"疲惫",s:"忽略内在"},
+ adv:"先滋养自己，才能滋养他人。",his:"皇后是大地母神，象征丰饶与创造。"},
+{id:4,name:"皇帝",en:"The Emperor",sym:"🏛",kw:["秩序","权威","稳定"],
+ up:{g:"秩序，权威，稳定",l:"稳定的关系",c:"领导力，结构",f:"财务稳健",h:"规律作息",s:"内在纪律"},
+ rv:{g:"专制，僵化，失控",l:"控制欲",c:"权力斗争",f:"财务混乱",h:"压力过大",s:"固执"},
+ adv:"建立结构，但别失去弹性。",his:"皇帝代表秩序与父权，是外在世界的建立者。"},
+{id:5,name:"教皇",en:"The Hierophant",sym:"⛪",kw:["传统","信仰","指引"],
+ up:{g:"传统，信仰，精神指引",l:"稳定的承诺",c:"遵循规则",f:"保守理财",h:"规律生活",s:"灵性导师"},
+ rv:{g:"打破传统，教条，叛逆",l:"关系挑战",c:"跳出框架",f:"冒险",h:"忽视健康",s:"质疑信仰"},
+ adv:"尊重传统，也可以走出自己的路。",his:"教皇代表制度化的信仰与传承。"},
+{id:6,name:"恋人",en:"The Lovers",sym:"💕",kw:["爱","选择","结合"],
+ up:{g:"爱，选择，结合",l:"深刻的连接",c:"合作顺利",f:"共同收益",h:"身心和谐",s:"内在整合"},
+ rv:{g:"分离，犹豫，价值观冲突",l:"关系裂痕",c:"选择困难",f:"利益分歧",h:"内在分裂",s:"价值混乱"},
+ adv:"忠于内心，做出选择。",his:"恋人牌代表选择与结合，也象征内在阴阳的整合。"},
+{id:7,name:"战车",en:"The Chariot",sym:"⚔",kw:["意志","胜利","前进"],
+ up:{g:"意志，胜利，前进",l:"主动追求",c:"突破瓶颈",f:"财务推进",h:"精力充沛",s:"意志坚定"},
+ rv:{g:"失控，方向不明，停滞",l:"关系拉扯",c:"目标模糊",f:"财务失控",h:"过度消耗",s:"内在冲突"},
+ adv:"握住缰绳，方向由你决定。",his:"战车驾驭黑白双狮，象征意志统合对立力量。"},
+{id:8,name:"力量",en:"Strength",sym:"🦁",kw:["勇气","耐心","温柔"],
+ up:{g:"勇气，耐心，温柔的力量",l:"包容与理解",c:"以柔克刚",f:"稳健增长",h:"身心平衡",s:"内在力量"},
+ rv:{g:"自我怀疑，急躁，软弱",l:"缺乏耐心",c:"信心不足",f:"财务焦虑",h:"疲惫",s:"内在动摇"},
+ adv:"真正的力量是温柔的坚持。",his:"力量牌以柔驯狮，象征内在的勇气与耐心。"},
+{id:9,name:"隐士",en:"The Hermit",sym:"🕯",kw:["内省","独处","智慧"],
+ up:{g:"内省，独处，智慧",l:"需要空间",c:"独立思考",f:"谨慎理财",h:"静养",s:"深度探索"},
+ rv:{g:"孤立，逃避，固执",l:"疏离",c:"闭门造车",f:"过度节俭",h:"孤独",s:"封闭"},
+ adv:"独处是为了更好地回来。",his:"隐士提着灯，照亮内在的道路。"},
+{id:10,name:"命运之轮",en:"Wheel of Fortune",sym:"☸",kw:["转变","循环","机遇"],
+ up:{g:"转变，循环，机遇",l:"关系转折",c:"时来运转",f:"财运变化",h:"状态起伏",s:"命运流动"},
+ rv:{g:"停滞，抗拒，厄运",l:"关系低谷",c:"时机未到",f:"财务波动",h:"状态低迷",s:"抗拒改变"},
+ adv:"顺应变化，轮子总会转。",his:"命运之轮象征循环与无常，一切都在流动。"},
+{id:11,name:"正义",en:"Justice",sym:"⚖",kw:["公平","平衡","因果"],
+ up:{g:"公平，平衡，因果",l:"关系对等",c:"公正决策",f:"财务平衡",h:"身心协调",s:"内在正义"},
+ rv:{g:"不公，失衡，逃避责任",l:"关系不平等",c:"决策偏颇",f:"财务纠纷",h:"失衡",s:"自我欺骗"},
+ adv:"为自己的选择负责。",his:"正义手持天平与剑，象征因果与平衡。"},
+{id:12,name:"倒吊人",en:"The Hanged Man",sym:"🙃",kw:["暂停","牺牲","新视角"],
+ up:{g:"暂停，牺牲，换位思考",l:"需要耐心",c:"等待时机",f:"暂时投入",h:"休息",s:"灵性臣服"},
+ rv:{g:"拖延，无谓牺牲，抗拒",l:"关系僵持",c:"停滞",f:"财务拖延",h:"疲惫",s:"挣扎"},
+ adv:"换个角度，暂停也是前进。",his:"倒吊人以新视角看世界，象征主动的等待。"},
+{id:13,name:"死神",en:"Death",sym:"🦋",kw:["结束","转变","重生"],
+ up:{g:"结束，转变，新生",l:"关系转型",c:"职业转换",f:"财务重整",h:"身心更新",s:"蜕变"},
+ rv:{g:"停滞，抗拒改变",l:"关系僵局",c:"不愿变动",f:"财务拖延",h:"停滞",s:"恐惧改变"},
+ adv:"放下旧的，才能迎接新的。",his:"死神代表彻底的转化，结束即开始。"},
+{id:14,name:"节制",en:"Temperance",sym:"🏺",kw:["平衡","调和","耐心"],
+ up:{g:"平衡，调和，耐心",l:"关系和谐",c:"稳步推进",f:"财务稳健",h:"身心平衡",s:"内在调和"},
+ rv:{g:"失衡，极端，急躁",l:"关系紧张",c:"节奏混乱",f:"财务失衡",h:"过度",s:"内在冲突"},
+ adv:"找到中间的道路。",his:"节制天使在两只杯间调和，象征平衡的艺术。"},
+{id:15,name:"恶魔",en:"The Devil",sym:"😈",kw:["束缚","欲望","阴影"],
+ up:{g:"束缚，欲望，阴影",l:"执念",c:"职场压力",f:"财务依赖",h:"成瘾",s:"内在阴影"},
+ rv:{g:"解脱，觉醒，放下",l:"关系松绑",c:"摆脱束缚",f:"财务独立",h:"戒断",s:"觉察"},
+ adv:"看见束缚，就已经开始自由。",his:"恶魔代表执念与束缚，但锁链其实很松。"},
+{id:16,name:"塔",en:"The Tower",sym:"🗼",kw:["突变","崩塌","觉醒"],
+ up:{g:"突变，崩塌，觉醒",l:"关系剧变",c:"突发变动",f:"财务危机",h:"突发状况",s:"顿悟"},
+ rv:{g:"延迟的崩塌，逃避",l:"关系隐忧",c:"危机潜伏",f:"财务隐患",h:"压力积累",s:"抗拒觉醒"},
+ adv:"崩塌之后，才能重建。",his:"塔被闪电击中，象征旧结构的瓦解。"},
+{id:17,name:"星星",en:"The Star",sym:"⭐",kw:["希望","灵感","疗愈"],
+ up:{g:"希望，信念，目标更新",l:"重燃希望",c:"灵感回归",f:"财务好转",h:"身心疗愈",s:"灵性连接"},
+ rv:{g:"失去信念，绝望",l:"缺乏信心",c:"目标模糊",f:"财务焦虑",h:"疲惫",s:"灵性疏离"},
+ adv:"保持希望，但也要脚踏实地。",his:"星星是暴风雨后的宁静，象征希望与疗愈。"},
+{id:18,name:"月亮",en:"The Moon",sym:"🌕",kw:["幻象","恐惧","潜意识"],
+ up:{g:"幻象，恐惧，潜意识",l:"不安",c:"信息不明",f:"财务迷雾",h:"焦虑",s:"深层探索"},
+ rv:{g:"真相浮现，释放恐惧",l:"误会澄清",c:"迷雾散去",f:"财务明朗",h:"情绪缓解",s:"觉察"},
+ adv:"穿越恐惧，才能看见真相。",his:"月亮照亮潜意识，也投下幻象的阴影。"},
+{id:19,name:"太阳",en:"The Sun",sym:"☀️",kw:["喜悦","成功","活力"],
+ up:{g:"喜悦，成功，活力",l:"幸福",c:"成就",f:"丰收",h:"健康",s:"光明"},
+ rv:{g:"暂时的阴霾，过度乐观",l:"小摩擦",c:"延迟的成功",f:"财务波动",h:"疲惫",s:"盲目"},
+ adv:"享受当下，也保持清醒。",his:"太阳是纯粹的喜悦与生命力。"},
+{id:20,name:"审判",en:"Judgement",sym:"📯",kw:["觉醒","召唤","重生"],
+ up:{g:"觉醒，召唤，重生",l:"关系升华",c:"重大转折",f:"财务清算",h:"身心更新",s:"灵魂觉醒"},
+ rv:{g:"逃避召唤，自我怀疑",l:"关系回避",c:"犹豫",f:"财务拖延",h:"忽视",s:"内在抗拒"},
+ adv:"听见内心的召唤，回应它。",his:"审判天使吹响号角，象征觉醒与重生。"},
+{id:21,name:"世界",en:"The World",sym:"🌍",kw:["完成","圆满","整合"],
+ up:{g:"完成，圆满，整合",l:"关系圆满",c:"成就达成",f:"财务自由",h:"身心和谐",s:"灵性整合"},
+ rv:{g:"未完成，拖延，缺憾",l:"关系未定",c:"收尾困难",f:"财务未结",h:"未竟",s:"整合受阻"},
+ adv:"享受完成，然后开启新旅程。",his:"世界之舞象征圆满与整合，一个循环的完成。"}
+];
+
+/* ============================================================
+   二、小阿卡纳数据（56张）
+   ============================================================ */
+const SUITS = [
+  {key:"wands",name:"权杖",sym:"🔥",element:"火",theme:"行动与热情"},
+  {key:"cups",name:"圣杯",sym:"💧",element:"水",theme:"情感与关系"},
+  {key:"swords",name:"宝剑",sym:"⚔️",element:"风",theme:"思想与挑战"},
+  {key:"pentacles",name:"星币",sym:"🪙",element:"土",theme:"物质与实践"}
+];
+const RANKS = ["一","二","三","四","五","六","七","八","九","十","侍从","骑士","皇后","国王"];
+const MINOR = {
+wands:[
+["新的行动与灵感","动力受阻、延迟"],
+["规划与选择","犹豫不决、计划搁浅"],
+["初步成果与扩展","进展受阻、等待"],
+["庆祝与稳定","不稳定、庆祝延迟"],
+["竞争与挑战","冲突化解、避免竞争"],
+["胜利与认可","缺乏认可、失败"],
+["坚持与防御","疲惫、放弃立场"],
+["快速进展与消息","延迟、混乱"],
+["坚持与最后防线","疲惫、放弃"],
+["负担与责任","放下负担、释放"],
+["热情与探索","缺乏方向、拖延"],
+["行动与冒险","鲁莽、急躁"],
+["自信与魅力","自私、嫉妒"],
+["领导与愿景","独断、冲动"]
+],
+cups:[
+["新的感情与开始","情感封闭、失落"],
+["伙伴关系与吸引","关系不平衡、分离"],
+["友谊与庆祝","过度放纵、孤立"],
+["冷漠与沉思","新的兴趣、觉醒"],
+["失落与悲伤","接受、走出悲伤"],
+["怀旧与纯真","沉溺过去"],
+["幻想与选择","清醒、做出选择"],
+["离开与寻找","徘徊、害怕改变"],
+["满足与愿望实现","不满、空虚"],
+["圆满与家庭幸福","关系破裂、家庭不和"],
+["情感新开始","情感不成熟"],
+["浪漫与追求","情绪化、不切实际"],
+["温柔与关怀","情绪化、依赖"],
+["情感成熟与包容","情绪操控、冷漠"]
+],
+swords:[
+["清晰与突破","混乱、错误判断"],
+["僵局与选择","信息过载、犹豫"],
+["心痛与分离","伤痛缓解、疗愈"],
+["休息与恢复","疲惫、焦虑"],
+["冲突与失败","和解、放下争执"],
+["过渡与离开困境","无法前进、拖延"],
+["策略与隐瞒","坦白、揭露"],
+["束缚与限制","解脱、新视角"],
+["焦虑与担忧","希望、走出焦虑"],
+["结束与痛苦","恢复、重生"],
+["好奇与学习","多疑、口舌"],
+["行动与直接","鲁莽、攻击性"],
+["清晰与独立","冷漠、刻薄"],
+["权威与公正","专制、滥用权力"]
+],
+pentacles:[
+["新的财务机会","机会错失、延迟"],
+["平衡与灵活","失衡、混乱"],
+["合作与技能","缺乏合作、质量差"],
+["稳定与保守","贪婪、过度控制"],
+["困难与匮乏","恢复、援助"],
+["给予与接受","不平等、债务"],
+["耐心与评估","焦躁、投资失败"],
+["勤奋与精进","完美主义、停滞"],
+["独立与丰盛","依赖、过度消费"],
+["财富与传承","财务问题、家庭矛盾"],
+["学习与新技能","拖延、缺乏专注"],
+["勤奋与可靠","停滞、固执"],
+["滋养与丰盛","忽视、过度操劳"],
+["成功与富足","固执、物质主义"]
+]};
+
+function buildAllCards(){
+  const all = MAJOR.map(c=>({
+    id:c.id,name:c.name,en:c.en,arcana:"大阿卡纳",suit:"",sym:c.sym,
+    element:"",kw:c.kw,up:c.up,rv:c.rv,adv:c.adv,his:c.his
+  }));
+  let id = 22;
+  SUITS.forEach(s=>{
+    MINOR[s.key].forEach((m,i)=>{
+      const rank = RANKS[i];
+      all.push({
+        id:id++, name:s.name+rank, en:s.key+" "+(i+1),
+        arcana:"小阿卡纳", suit:s.name, sym:s.sym, element:s.element,
+        kw:[s.theme, m[0].slice(0,6)],
+        up:{g:m[0],l:m[0],c:m[0],f:m[0],h:m[0],s:s.theme},
+        rv:{g:m[1],l:m[1],c:m[1],f:m[1],h:m[1],s:"能量受阻"},
+        adv:"", his:s.name+"属于"+s.element+"元素，主题是"+s.theme+"。"
+      });
+    });
+  });
+  return all;
+}
+const ALL_CARDS = buildAllCards();
+
+/* ============================================================
+   三、案例数据
+   ============================================================ */
+const CASES = [
+{
+  id:"c1",type:"choice",title:"是否该换工作？",category:"事业",spread:"三牌阵",
+  question:"案主问是否该换工作。",
+  background:"工作三年，感到瓶颈，但担心换工作风险。",
+  cards:[{pos:"过去",id:17,ori:"正位"},{pos:"现在",id:58,ori:"逆位"},{pos:"未来",id:0,ori:"正位"}],
+  options:[
+    {k:"A",t:"建议立刻裸辞"},
+    {k:"B",t:"可以先准备，不必立刻裸辞"},
+    {k:"C",t:"维持现状，不要动"},
+    {k:"D",t:"问题在人际关系，换工作没用"}
+  ],
+  answer:"B",
+  explanation:"过去星星正位说明原本有热情和希望；现在宝剑三逆位说明正在疗愈，伤痛在缓解；未来愚人正位鼓励重新出发。综合来看，适合先积累作品和人脉，再平稳过渡。",
+  conclusion:"可以开始准备换工作，但不必立刻裸辞。",
+  feedback:"三个月后案主换到新行业，状态明显改善。",
+  tags:["换工作","事业","三牌阵"]
+},
+{
+  id:"c2",type:"choice",title:"这段感情会怎么发展？",category:"爱情",spread:"单牌",
+  question:"案主问这段感情未来三个月的发展。",
+  background:"交往半年，最近沟通变少。",
+  cards:[{pos:"现状",id:13,ori:"逆位"}],
+  options:[
+    {k:"A",t:"关系即将彻底结束"},
+    {k:"B",t:"关系停滞，需要主动沟通"},
+    {k:"C",t:"马上会结婚"},
+    {k:"D",t:"对方已经变心"}
+  ],
+  answer:"B",
+  explanation:"死神逆位表示关系停滞，不愿改变，但也没有彻底结束。需要主动沟通，否则会陷入僵局。",
+  conclusion:"关系进入停滞期，主动沟通是关键。",
+  feedback:"案主主动沟通后，关系有所缓和。",
+  tags:["感情","单牌","停滞"]
+},
+{
+  id:"c3",type:"reveal",title:"最近财运如何？",category:"财运",spread:"三牌阵",
+  question:"案主问最近三个月的财运。",
+  background:"自由职业，收入不稳定，想了解财务趋势。",
+  cards:[{pos:"过去",id:36,ori:"正位"},{pos:"现在",id:50,ori:"逆位"},{pos:"未来",id:77,ori:"正位"}],
+  prompt:"先自己想一想，再点开解析。",
+  explanation:"过去星币九正位说明之前有独立丰盛的阶段；现在星币五逆位说明困难正在缓解，但还没完全走出；未来星币十正位预示财务将走向稳定和传承。整体是先苦后甜的走势。",
+  conclusion:"短期仍有压力，但中长期财务会趋于稳定，适合做长期规划。",
+  feedback:"案主三个月后接到稳定长期项目，收入改善。",
+  tags:["财运","三牌阵","自由职业"]
+},
+{
+  id:"c4",type:"reveal",title:"我该不该继续这段关系？",category:"爱情",spread:"单牌",
+  question:"案主问是否该继续这段关系。",
+  background:"在一起两年，反复争吵，但舍不得分开。",
+  cards:[{pos:"现状",id:15,ori:"正位"}],
+  prompt:"先自己想一想，再点开解析。",
+  explanation:"恶魔正位代表束缚与执念。这段关系可能有依赖、控制或不健康的模式，让案主难以离开。但恶魔的锁链其实很松，意味着束缚更多来自内心，而非外在。",
+  conclusion:"需要看清关系中的执念与依赖，是否继续取决于能否打破不健康的模式。",
+  feedback:"案主意识到自己的依赖模式，开始寻求独立。",
+  tags:["感情","单牌","执念"]
+}
+];
+
+const CARD_DETAILS = {
+  0: {
+    id: 0, name: "愚人", en: "THE FOOL", arcana: "大阿卡纳",
+    compareTable: [
+      { item: "关键词", up: "开始、自由、可能性、冒险、未知", rev: "冲动、迷失、逃避、犹豫、停滞" },
+      { item: "核心含义", up: "踏入尚未被经验定义的新阶段", rev: "无法正确面对未知与改变" },
+      { item: "人生课题", up: "学会在不确定中行动", rev: "在自由与责任之间建立平衡" },
+      { item: "高阶表现", up: "开放心态、创造力、活力、勇于尝试", rev: "谨慎规划后的重新出发" },
+      { item: "低阶表现", up: "过分天真、缺乏准备、忽视风险", rev: "鲁莽行动或因恐惧而裹足不前" },
+      { item: "感情", up: "勇敢开始新的关系，保持真诚与开放", rev: "不成熟关系、害怕承诺、重复旧模式" },
+      { item: "事业", up: "创业、转职、尝试新方向", rev: "缺乏方向、频繁更换目标、计划失控" },
+      { item: "象征原型", up: "旅人", rev: "迷途旅人" },
+      { item: "总结", up: "成长，始于一次未知的出发。", rev: "没有方向的自由，最终会变成迷失。" }
+    ],
+    symbols: [
+      { name: "山峰", meaning: "未来挑战与成长" }, { name: "白玫瑰", meaning: "纯真、开放、未经污染" },
+      { name: "小狗", meaning: "直觉与本能" }, { name: "行囊", meaning: "潜藏资源与天赋" },
+      { name: "太阳", meaning: "意识、生命力与神圣光明" }, { name: "悬崖", meaning: "未知与突破舒适区" },
+      { name: "红羽毛", meaning: "理想、灵感与精神追求" }
+    ],
+    detailedLife: {
+      love: { up: "感情进入新的开始。单身者容易遇见让自己心动的人；有伴侣者则可能开启新的相处阶段。关系尚未完全确定，但双方愿意一起探索未来。", rev: "关系中可能存在不成熟或逃避责任的问题，有人想享受自由，却不愿承担承诺带来的责任，因此容易呈现忽冷忽热或反复拉扯。" },
+      career: { up: "你可能正站在职业转折点，换工作、创业、转行、学习新技能都属于愚人的能量。重点不是保证成功，而是愿意开始。", rev: "容易因为准备不足而贸然行动，也可能因为担心失败而迟迟不敢开始。目标频繁改变却缺少落实，需要建立清晰规划并持续投入执行。" },
+      personalGrowth: { up: "正处于探索与学习阶段。允许自己犯错、尝试和积累经验，比追求完美更重要。许多成长都发生在未知之中，而不是停留在熟悉的环境里。", rev: "容易在冲动冒险与过度谨慎之间摇摆。害怕风险会限制成长，忽视后果又会制造问题。真正的自由来自承担责任后的主动选择。" }
+    },
+    correspondences: { element: "风", astrology: "天王星（现代）/ 无固定星座", number: "0 - 无限潜能", hebrew: "Aleph א", kabbalah: "Kether → Chokmah" },
+    message: "很多时候，人们总希望等到准备充分、看清结果之后再行动，但成长往往不会按照这样的顺序发生。真正重要的机会，经常出现在充满不确定性的阶段。没有人能够提前获得所有答案，也没有人能够通过思考代替经历。与其等待更好的时机，不如接受未知本来就是人生的一部分。保持好奇与行动力，允许自己犯错，也允许自己边学边做。当愿意离开熟悉的世界时，那些原本无法看见的可能性，才会逐渐出现在眼前。",
+    goldenQuote: "所有成长，都始于一次愿意离开已知世界的行动。"
+  },
+  1: {
+    id: 1, name: "魔术师", en: "THE MAGICIAN", arcana: "大阿卡纳",
+    compareTable: [
+      { item: "关键词", up: "意志、行动、创造、掌控、实现", rev: "欺骗、空谈、失控、伪装、资源浪费" },
+      { item: "核心含义", up: "将想法转化为现实的能力", rev: "能力与行动无法形成一致" },
+      { item: "人生课题", up: "学会主动运用自身资源创造结果", rev: "学会诚实面对自身能力与动机" },
+      { item: "高阶表现", up: "知行合一、资源整合、创造力落地", rev: "觉察操控倾向并重新建立自律" },
+      { item: "低阶表现", up: "操控欲、自负、过度表现", rev: "谎言包装、投机取巧、纸上谈兵" },
+      { item: "感情", up: "主动追求、积极沟通、关系推进", rev: "关系中的操纵、隐瞒或沟通失真" },
+      { item: "事业", up: "创业、领导、项目启动、商业执行", rev: "计划很多却缺乏执行，能力错配" },
+      { item: "象征原型", up: "炼金术士、创造者、显化者", rev: "阴影炼金术士、骗子原型" },
+      { item: "总结", up: "真正的力量来自把想法变成现实。", rev: "力量失去真实基础则必沦为空洞表演。" }
+    ],
+    symbols: [
+      { name: "手势", meaning: "内在状态，最终会在外在世界留下痕迹" }, { name: "∞ 符号", meaning: "象征无限的潜能与持续创造力" },
+      { name: "工具", meaning: "象征行动、情感、思想与现实资源已经齐备" }, { name: "长袍", meaning: "白色象征纯粹意识、红色象征生命力与行动力" },
+      { name: "百合花", meaning: "代表纯净动机与理性秩序" }, { name: "红玫瑰", meaning: "象征热情、欲望与生命动力" }
+    ],
+    detailedLife: {
+      love: { up: "关系进入主动发展阶段。有人愿意表达真实想法，也愿意通过行动推进感情。比起猜测对方心意，更重要的是坦诚沟通与创造相处机会。", rev: "关系中容易出现言行不一的情况。表面热情积极，实际却缺乏投入与兑现。也可能有人试图通过技巧影响对方，而忽略真实情感交流。" },
+      career: { up: "这是展现能力与推动计划落地的好时期。你拥有完成目标所需的资源与条件，关键在于主动承担责任，并把想法转化为具体成果。", rev: "容易陷入计划很多却迟迟不行动的状态。过度关注包装与表现，反而忽略执行本身。真正的问题不是能力不足，而是行动缺位。" },
+      personalGrowth: { up: "你开始意识到人生改变并非依靠运气，而是来自持续行动。通过不断实践与尝试，逐渐建立对自身能力的信任与掌控感。", rev: "知道很多道理，却难以真正落实到生活中。成长停滞往往不是缺少知识，而是缺少持续行动与面对现实结果的勇气。" }
+    },
+    correspondences: { element: "风", astrology: "水星 / 无固定星座", number: "1 - 开始、意志、创造、独立、显化", hebrew: "Beth ב", kabbalah: "Kether → Binah" },
+    message: "如果魔术师是一位人生老师，他会提醒我们：很多时候，问题并不在于缺少机会，而在于没有真正使用已经拥有的资源。知识、天赋、人脉、经验、时间，这些元素往往早已摆在桌上。真正的差别来自行动。创造并不是等待灵感降临，而是在有限条件下持续尝试。力量不会因为拥有而产生，它只会被运用时显现。任何理想如果停留在脑海中，都只是可能性；只有经过实践，才会成为现实。",
+    goldenQuote: "所有创造，都始于一个人决定把想法带到现实世界。"
+  },
+  2: {
+    id: 2, name: "女祭司", en: "THE HIGH PRIESTESS", arcana: "大阿卡纳",
+    compareTable: [
+      { item: "关键词", up: "直觉、智慧、洞察、神秘、沉静", rev: "迷失、误判、自我欺骗、失去直觉" },
+      { item: "核心含义", up: "向内探索真实答案", rev: "与内在智慧失去连接" },
+      { item: "人生课题", up: "学会倾听内在声音", rev: "学会分辨直觉与幻想" },
+      { item: "高阶表现", up: "深刻洞察、自我觉察、智慧成熟", rev: "发现被压抑的真实需求" },
+      { item: "低阶表现", up: "逃避现实、沉迷幻想、过度被动", rev: "情绪混乱、拒绝面对真相" },
+      { item: "感情", up: "感情需要时间沉淀与观察", rev: "隐瞒、猜测、缺乏沟通" },
+      { item: "事业", up: "信息尚未完全显现，适合研究与规划", rev: "信息失真，决策依据不足" },
+      { item: "象征原型", up: "智慧女性", rev: "阴影智者" },
+      { item: "总结", up: "真正重要的答案，往往来自内心深处。", rev: "拒绝倾听内心，世界就会变得混乱。" }
+    ],
+    symbols: [
+      { name: "双柱", meaning: "代表一切对立力量：理性与感性、已知与未知" }, { name: "面纱", meaning: "象征潜意识、秘密以及尚未显现的信息" },
+      { name: "月亮", meaning: "潜意识最经典的象征" }, { name: "经卷", meaning: "知识可以学习，但智慧必须体验" },
+      { name: "石榴", meaning: "象征生命力、隐藏的丰富性以及潜在创造力" }, { name: "长袍", meaning: "象征内省、宁静与深层感知能力" }
+    ],
+    detailedLife: {
+      love: { up: "感情需要时间沉淀与观察，别急着确认关系或追问结果。有些答案不会立刻出现，而是在日常相处与细节之中慢慢显现。", rev: "容易因为猜测、误会或缺乏沟通而产生距离。你看见的未必是真相，与其不断揣测对方，不如先厘清自己的真实感受。" },
+      career: { up: "目前更适合学习、研究和积累，而非仓促行动。有些关键信息尚未出现，保持观察、搜集资料、培养专业能力，比急于做决定更重要。", rev: "你可能正在依据不完整的信息做判断。职场中的流言、误解或错误预期容易影响决策，此时需要重新核查事实，而不是依赖直觉猜测。" },
+      personalGrowth: { up: "这是向内探索的重要阶段。外部世界未能提供答案，但你的内心已经知道方向。通过反思与觉察，你会逐渐发现真正重要的问题。", rev: "你可能长期忽略自己的真实需求，把注意力全部放在外界评价上。成长受阻并非因为能力不足，而是因为与内在声音失去了连接。" }
+    },
+    correspondences: { element: "水", astrology: "月亮 / 月亮体系", number: "2 - 分化、关系、反映、二元性", hebrew: "Gimel ג", kabbalah: "Kether → Tiphareth" },
+    message: "如果女祭司是一位人生导师，她最想告诉我们的，是不要把所有答案都寄托于外界。很多时候，我们并不是缺少信息，而是不愿意面对内心早已知道的事实。当世界充满噪音时，保持安静反而是一种能力。学会观察自己的情绪、直觉与潜意识讯号，不急于行动，也不急于下结论。真正的智慧并非来自掌控一切，而是知道何时等待、何时倾听，以及何时诚实面对自己。",
+    goldenQuote: "她代表的不是隐藏的秘密，而是我们尚未愿意面对的真相。"
+  },
+  3: {
+    id: 3, name: "皇后", en: "THE EMPRESS", arcana: "大阿卡纳",
+    compareTable: [
+      { item: "关键词", up: "丰盛、创造、生长、滋养、接纳", rev: "匮乏、停滞、过度照顾、自我忽视" },
+      { item: "核心含义", up: "生命力的自然流动与创造力的表达", rev: "生命能量无法顺畅流动" },
+      { item: "人生课题", up: "学会孕育而非控制", rev: "学会先滋养自己" },
+      { item: "高阶表现", up: "慈悲、丰盛、创造、包容", rev: "建立健康边界与自我照顾" },
+      { item: "低阶表现", up: "溺爱、放纵、过度依赖舒适", rev: "控制、依赖、情感勒索" },
+      { item: "感情", up: "关系进入滋养与成长阶段", rev: "爱变成责任，失去情感流动" },
+      { item: "事业", up: "创意项目、品牌建设、资源扩张", rev: "创造力枯竭，资源利用失衡" },
+      { item: "象征原型", up: "大母神", rev: "吞噬之母" },
+      { item: "总结", up: "真正的丰盛来自持续创造生命价值。", rev: "当给予失去平衡，丰盛便会变成消耗。" }
+    ],
+    symbols: [
+      { name: "麦田", meaning: "象征收获与丰饶，丰盛是长期耕耘之后的自然形成" }, { name: "石榴", meaning: "繁衍与生命循环的象征，表达创造力与生命潜能" },
+      { name: "金星", meaning: "象征吸引、关系、美感与价值" }, { name: "景观", meaning: "自然生命力不断循环流动" },
+      { name: "皇冠", meaning: "十二颗星星：象征自然周期与宇宙秩序" }, { name: "颜色", meaning: "红色象征生命力与欲望、绿色象征成长与繁荣" },
+      { name: "权杖", meaning: "象征创造力的主导权" }
+    ],
+    detailedLife: {
+      love: { up: "关系进入稳定成长阶段，双方愿意投入时间与情感经营未来。爱不再是激情与浪漫，而是在日常生活中持续给予理解、支持与陪伴。", rev: "关系中可能出现过度付出或情感依赖的问题。一方承担太多照顾责任，导致爱逐渐变成压力，双方都难以获得真正满足。" },
+      career: { up: "工作成果开始逐渐累积，适合推进长期计划与创意项目。你拥有整合资源与培养机会的能力，努力将慢慢转化为实际收获。", rev: "事业发展容易出现停滞感，投入许多时间却看不到明显成果。也可能因为过于追求稳定，而错失新的成长与突破机会。" },
+      personalGrowth: { up: "开始学会尊重自己的节奏与需求，不再急于证明价值。成长来自持续积累与自我滋养，而不是不断与他人竞争和比较。", rev: "长期关注别人期待，却忽略自己的真实感受。内在能量逐渐被消耗，容易感到疲惫、空虚，并失去原本的创造热情。" }
+    },
+    correspondences: { element: "土", astrology: "金星 / 金牛座", number: "3 - 创造、成长、诞生", hebrew: "Daleth (ת)", kabbalah: "Chokmah → Binah" },
+    message: "如果皇后是一位人生导师，她会告诉我们：真正的创造并不来自征服世界，而来自培育生命。很多人总想拥有更多，却忽略了自己是否拥有让事物成长的能力。关系需要经营，事业需要培养，梦想也需要时间发芽。丰盛不是突然降临的礼物，而是在一次次照顾、投入与坚持之中慢慢形成的结果。当你学会尊重成长的节奏，生命自然会回应你的付出。",
+    goldenQuote: "丰盛不是拥有更多，而是拥有让生命持续成长的能力。"
+  }
+};
+
+/* ============================================================
+   每日一言数据（纯句子，无出处）
+   ============================================================ */
+const DAILY_QUOTES = [
+  // 道德经
+  "上善若水，水善利万物而不争。",
+  "知人者智，自知者明。胜人者有力，自胜者强。",
+  "天下难事，必作于易；天下大事，必作于细。",
+  "合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。",
+  "大方无隅，大器晚成，大音希声，大象无形。",
+  "知足不辱，知止不殆，可以长久。",
+  "慎终如始，则无败事。",
+  "夫唯不争，故天下莫能与之争。",
+  "人法地，地法天，天法道，道法自然。",
+  "飘风不终朝，骤雨不终日。",
+  "知者不言，言者不知。",
+  "信言不美，美言不信。善者不辩，辩者不善。",
+  "天下莫柔弱于水，而攻坚强者莫之能胜。",
+  "为之于未有，治之于未乱。",
+  "生而不有，为而不恃，功成而弗居。",
+  "曲则全，枉则直，洼则盈，敝则新，少则得，多则惑。",
+  "大丈夫处其厚，不居其薄；处其实，不居其华。",
+  "江海所以能为百谷王者，以其善下之。",
+  "祸兮福之所倚，福兮祸之所伏。",
+  "治大国若烹小鲜。",
+  "图难于其易，为大于其细。",
+  "圣人后其身而身先，外其身而身存。",
+  "飘风不终朝，骤雨不终日。孰为此者？天地。",
+  "天之道，损有余而补不足。",
+  "人之道，则不然，损不足以奉有余。",
+  "弱之胜强，柔之胜刚。",
+  "正言若反。",
+  "天道无亲，常与善人。",
+  "圣人不积，既以为人己愈有，既以与人己愈多。",
+  "甘其食，美其服，安其居，乐其俗。",
+
+  // 庄子
+  "人生天地之间，若白驹过隙，忽然而已。",
+  "君子之交淡若水，小人之交甘若醴。",
+  "吾生也有涯，而知也无涯。",
+  "相濡以沫，不如相忘于江湖。",
+  "至人之用心若镜，不将不迎。",
+  "朴素而天下莫能与之争美。",
+  "至乐无乐，至誉无誉。",
+  "人能虚己以游世，孰能害之。",
+  "泉涸，鱼相与处于陆，相呴以湿，相濡以沫，不如相忘于江湖。",
+  "大知闲闲，小知间间。",
+  "天地与我并生，万物与我为一。",
+  "方生方死，方死方生。",
+  "彼亦一是非，此亦一是非。",
+  "以指喻指之非指，不若以非指喻指之非指也。",
+  "朝菌不知晦朔，蟪蛄不知春秋。",
+
+  // 周易
+  "天行健，君子以自强不息。",
+  "地势坤，君子以厚德载物。",
+  "君子终日乾乾，夕惕若，厉，无咎。",
+  "穷理尽性，以至于命。",
+  "君子以俭德辟难，不可荣以禄。",
+  "积善之家，必有余庆；积不善之家，必有余殃。",
+  "二人同心，其利断金；同心之言，其臭如兰。",
+  "君子藏器于身，待时而动。",
+  "慢藏诲盗，冶容诲淫。",
+  "善不积不足以成名，恶不积不足以灭身。",
+  "小人以小善为无益而弗为也，以小恶为无伤而弗去也。",
+  "德薄而位尊，知小而谋大，力小而任重，鲜不及矣。",
+  "君子上交不谄，下交不渎。",
+  "几者动之微，吉之先见者也。",
+  "君子见几而作，不俟终日。",
+
+  // 东方玄学与心性
+  "我在天中，天在我心。",
+  "人生最好的境界，是丰富的安静。",
+  "运气差的阶段要充足的睡眠，能改运。",
+  "人越快乐，运气才会越好。",
+  "珍惜自己的低谷，那时候什么都是真的。",
+  "不要抱怨，抱怨也没用。",
+  "少说话，少开口，多冥想，增运。",
+  "心静则清，心清则明，心明则灵。",
+  "相由心生，境随心转。",
+  "命由己造，相由心生，世间万物皆是化相。",
+  "一切福田，不离方寸；从心而觅，感无不通。",
+  "爱出者爱返，福往者福来。",
+  "但行好事，莫问前程。",
+  "人为善，福虽未至，祸已远离。",
+  "人为恶，祸虽未至，福已远离。",
+  "积德虽无人见，行善自有天知。",
+  "万事皆有因果，万物皆有轮回。",
+  "你只管善良，上天自有安排。",
+  "心若向阳，无谓悲伤。",
+  "心宽一寸，路宽一丈。",
+  "大智若愚，大巧若拙，大辩若讷。",
+  "静水流深，人贵语迟。",
+  "水深则流缓，人贵则语迟。",
+  "宠辱不惊，看庭前花开花落；去留无意，望天上云卷云舒。",
+  "不以物喜，不以己悲。",
+  "塞翁失马，焉知非福。",
+  "祸福无门，惟人自召。",
+  "善恶之报，如影随形。",
+  "天网恢恢，疏而不失。",
+  "天道好还，疏而不漏。",
+
+  // 塔罗与占星相关（不含巫术）
+  "塔罗是照见内心的镜子。",
+  "牌面是符号，答案在你心里。",
+  "每一张牌都是你的一面。",
+  "占星让我们看见时间的节奏。",
+  "星盘是一张生命的地图。",
+  "行星不决定命运，它们只是照亮道路。",
+  "塔罗不预言未来，它呈现当下的能量。",
+  "抽到的不只是牌，是你自己的投射。",
+  "星座是性格的原型，不是宿命。",
+  "上升是你戴上的面具，太阳是你真正的核心。",
+  "月亮代表你内在最柔软的需要。",
+  "水星决定你如何思考与表达。",
+  "金星是你爱与被爱的方式。",
+  "火星是你的行动力与欲望。",
+  "木星带来扩张与幸运。",
+  "土星教会你责任与边界。",
+  "天王星带来突变与觉醒。",
+  "海王星是梦想与幻象。",
+  "冥王星是彻底的转化。",
+  "十二宫位是生命的十二个舞台。",
+  "相位是行星之间的对话。",
+  "塔罗的愚人，是每一个踏上旅程的你。",
+  "星星牌永远在暴风雨之后。",
+  "月亮牌提醒你穿越恐惧。",
+  "太阳牌是纯粹的喜悦。",
+  "世界牌是圆满，也是新的开始。",
+  "命运之轮永远在转动。",
+  "正义牌提醒你为自己的选择负责。",
+  "节制牌教你平衡的艺术。",
+  "力量牌是温柔的坚持。",
+  "隐士提灯照亮内在的路。",
+  "死神不是结束，是转化。",
+  "塔牌崩塌之后才能重建。",
+
+  // 星座性格与鼓励
+  "白羊座：你天生就是开路的人。",
+  "金牛座：慢慢来，稳一点，你终会到达。",
+  "双子座：你的好奇心就是你的天赋。",
+  "巨蟹座：温柔是你的力量，不是软弱。",
+  "狮子座：你值得被看见，也值得被爱。",
+  "处女座：完美不存在，但你的用心很珍贵。",
+  "天秤座：平衡不是妥协，是智慧。",
+  "天蝎座：你的深度是你最大的魅力。",
+  "射手座：自由是你的信仰，但别忘了回家。",
+  "摩羯座：你走的每一步都算数。",
+  "水瓶座：你的与众不同，就是你的价值。",
+  "双鱼座：你的想象力是通往另一个世界的门。",
+  "火象星座：行动、热情、勇敢。",
+  "土象星座：稳定、务实、坚持。",
+  "风象星座：沟通、思考、连接。",
+  "水象星座：感受、共情、疗愈。",
+  "太阳星座是你的人生目标。",
+  "月亮星座是你的情感需求。",
+  "上升星座是你给世界的第一印象。",
+  "金星在金牛：爱是稳定与感官的享受。",
+  "金星在天蝎：爱是深刻与彻底的交付。",
+  "月亮在巨蟹：你需要一个安全的港湾。",
+  "月亮在摩羯：你习惯把情绪藏起来。",
+  "火星在白羊：行动力强，但容易冲动。",
+  "火星在金牛：慢热，但持久。",
+  "水星在双子：思维敏捷，善于表达。",
+  "水星在处女：逻辑清晰，注重细节。",
+  "土星回归：你真正成为自己的时刻。",
+  "木星回归：扩张与幸运的周期。",
+  "天王星对冲：打破旧有模式。",
+  "海王星合相：灵性与梦想的觉醒。",
+  "冥王星刑克：深层的蜕变。",
+  "星盘里没有坏配置，只有不同的功课。",
+  "你的星座不是限制，是你的起点。",
+
+  // 通用心灵文案
+  "你不需要变成谁，你只需要成为你自己。",
+  "慢下来，听听内心的声音。",
+  "所有的答案都在你之内。",
+  "你比想象中更强大。",
+  "允许一切发生，然后继续前行。",
+  "放下执念，才能轻装上阵。",
+  "感恩拥有，珍惜当下。",
+  "每一个当下，都是新的开始。",
+  "你不必完美，你只需要真实。",
+  "深呼吸，一切都会好起来。",
+  "相信直觉，它很少骗你。",
+  "你的存在本身就有意义。",
+  "别急，时间会给你答案。",
+  "温柔地对待自己，就像对待最爱的人。",
+  "你值得被爱，也值得拥有美好。",
+  "过去已去，未来未来，安住当下。",
+  "心简单，世界就简单。",
+  "你若盛开，清风自来。",
+  "但行好事，莫问前程。",
+  "一切都会过去，一切都会到来。",
+  "你不需要向任何人证明自己。",
+  "安静地努力，安静地成长。",
+  "每一次低谷，都是向上的开始。",
+  "你的感受是真实的，值得被看见。",
+  "爱自己，是终身浪漫的开始。",
+  "你正在成为更好的自己。",
+  "不必焦虑，你有自己的节奏。",
+  "放下比较，专注自己的路。",
+  "你心中的光，永远不会熄灭。",
+  "今天也要好好爱自己。"
+];
+
+// 根据日期获取今天的句子
+function getTodayQuote(){
+  const d = new Date();
+  const dayIndex = Math.floor(d.getTime() / 86400000);
+  return DAILY_QUOTES[dayIndex % DAILY_QUOTES.length];
+}
+
+/* ============================================================
+   四、存储
+   ============================================================ */
+const store = {
+  get(k,d){try{const v=localStorage.getItem('tarot_'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('tarot_'+k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ============================================================
+   五、工具
+   ============================================================ */
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'),1600);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function getCard(id){return ALL_CARDS.find(c=>c.id===id)}
+
+/* ============================================================
+   六、路由
+   ============================================================ */
+let state = {page:'home', params:{}};
+
+function go(page, params={}){
+  state.page = page;
+  state.params = params || {};
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active',
+      t.dataset.page === page ||
+      (page==='card-detail'&&t.dataset.page==='cards') ||
+      (page==='case-detail'&&t.dataset.page==='cases') ||
+      (page==='note-edit'&&t.dataset.page==='notes') ||
+      (page==='note-detail'&&t.dataset.page==='notes'));
+  });
+  render();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function render(){
+  const app = document.getElementById('app');
+  const p = state.page;
+  if(p==='home') app.innerHTML = viewHome();
+  else if(p==='cards') app.innerHTML = viewCards();
+  else if(p==='card-detail') app.innerHTML = viewCardDetail();
+  else if(p==='cases') app.innerHTML = viewCases();
+  else if(p==='case-detail') app.innerHTML = viewCaseDetail();
+  else if(p==='notes') app.innerHTML = viewNotes();
+  else if(p==='note-edit') app.innerHTML = viewNoteEdit();
+  else if(p==='note-detail') app.innerHTML = viewNoteDetail();
+  else if(p==='mine') app.innerHTML = viewMine();
+  bind();
+}
+
+/* ============================================================
+   七、首页
+   ============================================================ */
+function viewHome(){
+  const learned = store.get('learned',[]);
+  const notes = store.get('notes',[]);
+  const favCards = store.get('favCards',[]);
+  const recent = store.get('recent',[]);
+  const pct = Math.round(learned.length/78*100);
+
+  let recentHtml = '';
+  if(recent.length){
+    recentHtml = '<h2 class="sec">最近查看</h2><div class="grid-3">' +
+      recent.slice(0,3).map(id=>{
+        const c = getCard(id); if(!c) return '';
+        return `<div class="entry" data-go="card-detail" data-id="${c.id}">
+          <span class="sym">${c.sym}</span><span class="nm">${esc(c.name)}</span></div>`;
+      }).join('') + '</div>';
+  }
+
+  let favHtml = '';
+  if(favCards.length){
+    favHtml = '<h2 class="sec">我的收藏</h2><div class="grid-3">' +
+      favCards.slice(0,3).map(id=>{
+        const c = getCard(id); if(!c) return '';
+        return `<div class="entry" data-go="card-detail" data-id="${c.id}">
+          <span class="sym">★</span><span class="nm">${esc(c.name)}</span></div>`;
+      }).join('') + '</div>';
+  }
+
+  let noteHtml = '';
+  if(notes.length){
+    noteHtml = '<h2 class="sec">最近笔记</h2>' +
+      notes.slice(0,2).map(n=>`
+        <div class="note-item" data-go="note-detail" data-id="${n.id}">
+          <h3>${esc(n.title)}</h3>
+          <div class="date">${esc(n.date)}</div>
+          <div class="preview">${esc(n.myReading||'')}</div>
+        </div>`).join('');
+  }
+
+  return `
+    <p class="muted" style="margin-bottom:14px">今天想查哪张牌？</p>
+    <input class="search" id="homeSearch" placeholder="搜索牌名或关键词…" autocomplete="off">
+
+<h2 class="sec">每日一言</h2>
+    <div class="card" style="margin-bottom:4px">
+      <p style="font-size:15px;line-height:1.9;color:var(--gold2);letter-spacing:.5px">「${esc(getTodayQuote())}」</p>
+    </div>
+
+    <h2 class="sec">学习进度</h2>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;font-size:13px">
+        <span>已学牌数</span><span style="color:var(--gold)">${learned.length} / 78</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="stat-grid">
+        <div class="stat"><div class="num">${learned.length}</div><div class="lb">已学牌</div></div>
+        <div class="stat"><div class="num">${notes.length}</div><div class="lb">笔记</div></div>
+        <div class="stat"><div class="num">${favCards.length}</div><div class="lb">收藏</div></div>
+      </div>
+    </div>
+
+    <h2 class="sec">快速入口</h2>
+    <div class="grid-3">
+      <div class="entry" data-go="cards" data-filter="大阿卡纳"><span class="sym">✦</span><span class="nm">大阿卡纳</span></div>
+      <div class="entry" data-go="cards" data-filter="权杖"><span class="sym">🔥</span><span class="nm">权杖</span></div>
+      <div class="entry" data-go="cards" data-filter="圣杯"><span class="sym">💧</span><span class="nm">圣杯</span></div>
+      <div class="entry" data-go="cards" data-filter="宝剑"><span class="sym">⚔️</span><span class="nm">宝剑</span></div>
+      <div class="entry" data-go="cards" data-filter="星币"><span class="sym">🪙</span><span class="nm">星币</span></div>
+      <div class="entry" data-go="cases"><span class="sym">❖</span><span class="nm">案例库</span></div>
+    </div>
+
+    ${recentHtml}
+    ${favHtml}
+    ${noteHtml}
+  `;
+}
+
+/* ============================================================
+   八、牌库
+   ============================================================ */
+function viewCards(){
+  const filter = state.params.filter || '全部';
+  const kw = state.params.kw || '';
+  let list = ALL_CARDS;
+  if(filter==='大阿卡纳') list = list.filter(c=>c.arcana==='大阿卡纳');
+  else if(filter!=='全部') list = list.filter(c=>c.suit===filter);
+  if(kw){
+    const k = kw.toLowerCase();
+    list = list.filter(c=>c.name.includes(kw)||c.en.toLowerCase().includes(k)||c.kw.some(x=>x.includes(kw)));
+  }
+  const filters = ['全部','大阿卡纳','权杖','圣杯','宝剑','星币'];
+  const filterHtml = filters.map(f=>
+    `<button class="chip ${f===filter?'active':''}" data-filter="${f}">${f}</button>`
+  ).join('');
+
+  const listHtml = list.length ? list.map(c=>`
+    <div class="card-item" data-go="card-detail" data-id="${c.id}">
+      <div class="card-thumb">${c.sym}</div>
+      <div class="card-meta">
+        <h3>${esc(c.name)}</h3>
+        <p>${esc(c.en)} · ${esc(c.kw.join(' / '))}</p>
+      </div>
+    </div>
+  `).join('') : '<div class="empty"><span class="sym">🔍</span>没有找到相关牌</div>';
+
+  return `
+    <input class="search" id="cardSearch" placeholder="搜索牌名或关键词…" value="${esc(kw)}" autocomplete="off">
+    <div class="filters">${filterHtml}</div>
+    <div class="card-list">${listHtml}</div>
+  `;
+}
+
+/* ============================================================
+   九、牌详情
+   ============================================================ */
+function viewCardDetail(){
+  const id = state.params.id;
+  const c = getCard(id);
+  if(!c) return '<div class="empty">牌不存在</div>';
+  
+  const ori = state.params.ori || 'up';
+  const fav = store.get('favCards',[]);
+  const isFav = fav.includes(id);
+
+  // 记录最近查看与已学
+  let recent = store.get('recent',[]).filter(x=>x!==id);
+  recent.unshift(id);
+  store.set('recent',recent.slice(0,10));
+  let learned = store.get('learned',[]);
+  if(!learned.includes(id)){learned.push(id);store.set('learned',learned)}
+
+  // 尝试获取详细数据
+  const detail = (typeof CARD_DETAILS !== 'undefined' && CARD_DETAILS[id]) ? CARD_DETAILS[id] : null;
+
+  // ============================================================
+  // 路线一：有详细数据，渲染完整丰富版（大阿卡纳）
+  // ============================================================
+  if (detail) {
+    // 1. 对比表格
+    const tableHtml = detail.compareTable.map(row => `
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px; margin-bottom:8px;">
+        <div style="color:var(--gold); font-size:13px; font-weight:bold; margin-bottom:6px;">${row.item}</div>
+        <div style="display:flex; gap:8px; font-size:12.5px; line-height:1.6;">
+          <div style="flex:1; color:#9ee8c0;"><span style="color:var(--muted); display:block; font-size:10px; margin-bottom:2px;">正位</span>${row.up}</div>
+          <div style="flex:1; color:#f0a0a0;"><span style="color:var(--muted); display:block; font-size:10px; margin-bottom:2px;">逆位</span>${row.rev}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // 2. 象征解析
+    const symbolsHtml = detail.symbols.map(s => `
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center;">
+        <div style="color:var(--gold); font-size:12px; font-weight:bold;">${s.name}</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">${s.meaning}</div>
+      </div>
+    `).join('');
+
+    // 3. 生活化解读（随正逆位切换）
+    const lifeHtml = `
+      <div class="detail-row"><div class="lbl" style="width:60px;">感情</div><div class="val">${detail.detailedLife.love[ori]}</div></div>
+      <div class="detail-row"><div class="lbl" style="width:60px;">事业</div><div class="val">${detail.detailedLife.career[ori]}</div></div>
+      <div class="detail-row"><div class="lbl" style="width:60px;">个人成长</div><div class="val">${detail.detailedLife.personalGrowth[ori]}</div></div>
+    `;
+
+    // 4. 对应关系
+    const corrHtml = `
+      <div class="stat-grid" style="grid-template-columns:1fr 1fr; gap:8px;">
+        <div class="stat"><div class="lb">元素</div><div class="num" style="font-size:14px; margin-top:4px;">${detail.correspondences.element}</div></div>
+        <div class="stat"><div class="lb">星座/行星</div><div class="num" style="font-size:14px; margin-top:4px;">${detail.correspondences.astrology}</div></div>
+        <div class="stat"><div class="lb">数字象征</div><div class="num" style="font-size:14px; margin-top:4px;">${detail.correspondences.number}</div></div>
+        <div class="stat"><div class="lb">希伯来字母</div><div class="num" style="font-size:14px; margin-top:4px;">${detail.correspondences.hebrew}</div></div>
+        <div class="stat" style="grid-column:span 2;"><div class="lb">卡巴拉路径</div><div class="num" style="font-size:14px; margin-top:4px;">${detail.correspondences.kabbalah}</div></div>
+      </div>
+    `;
+
+    return `
+      <button class="back" data-go="cards">← 返回牌库</button>
+      <div class="big-card" style="max-width:180px; margin:0 auto 16px;">
+        <img src="${c.image}" alt="${c.name}" class="card-img ${ori === 'rv' ? 'rotate-180' : ''}" style="position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:cover;border-radius:10px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="sym" style="display:none">${c.sym}</div>
+      </div>
+      <h2 style="color:var(--gold); text-align:center; font-size:20px; margin-bottom:8px;">${esc(detail.name)} - ${esc(detail.en)}</h2>
+      <div class="ori-switch" style="margin-top:16px;">
+        <button class="ori-btn ${ori==='up'?'active':''}" data-ori="up">正位</button>
+        <button class="ori-btn ${ori==='rv'?'active':''}" data-ori="rv">逆位</button>
+      </div>
+      <h2 class="sec">核心对比</h2>
+      ${tableHtml}
+      <h2 class="sec">象征解析</h2>
+      <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">${symbolsHtml}</div>
+      <h2 class="sec">生活化解读</h2>
+      <div class="card">${lifeHtml}</div>
+      <h2 class="sec">对应关系</h2>
+      <div class="card">${corrHtml}</div>
+      <h2 class="sec">这张牌能告诉我们什么？</h2>
+      <div class="explain" style="margin-top:0;">
+        <p>${esc(detail.message)}</p>
+      </div>
+      <div class="explain" style="text-align:center; border-color:var(--gold2); background:rgba(212,175,55,0.1); margin-top:16px;">
+        <p style="font-size:15px; font-weight:bold; color:var(--gold2);">${esc(detail.goldenQuote)}</p>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:24px;">
+        <button class="btn ${isFav?'btn-gold':'btn-ghost'}" id="favBtn" style="flex:1">${isFav?'★ 已收藏':'☆ 收藏'}</button>
+        <button class="btn btn-ghost" data-go="cards" style="flex:1">返回列表</button>
+      </div>
+    `;
+  }
+
+  // ============================================================
+  // 路线二：没有详细数据，退回原来的简版（小阿卡纳）
+  // ============================================================
+  const d = c[ori];
+  const rows = [
+    ['综合',d.g],['爱情',d.l],['事业',d.c],
+    ['财运',d.f],['健康',d.h],['灵性',d.s]
+  ].map(r=>`<div class="detail-row"><div class="lbl">${r[0]}</div><div class="val">${esc(r[1])}</div></div>`).join('');
+
+  return `
+    <button class="back" data-go="cards">← 返回牌库</button>
+    <div class="big-card">
+      <img src="${c.image}" alt="${c.name}" class="card-img ${ori === 'rv' ? 'rotate-180' : ''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="sym" style="display:none">${c.sym}</div>
+      <div class="nm">${esc(c.name)}</div>
+      <div class="en">${esc(c.en)}</div>
+    </div>
+    <div style="text-align:center;margin-bottom:16px">
+      <div class="muted">${esc(c.arcana)}${c.suit?' · '+esc(c.suit):''}${c.element?' · '+esc(c.element):''}</div>
+      <div style="margin-top:8px">${c.kw.map(k=>`<span class="tag">${esc(k)}</span>`).join('')}</div>
+    </div>
+    <div class="ori-switch">
+      <button class="ori-btn ${ori==='up'?'active':''}" data-ori="up">正位</button>
+      <button class="ori-btn ${ori==='rv'?'active':''}" data-ori="rv">逆位</button>
+    </div>
+    <div class="card">${rows}</div>
+    ${c.adv?`<div class="explain"><h4>建议</h4><p>${esc(c.adv)}</p></div>`:''}
+    ${c.his?`<div class="explain"><h4>历史与象征</h4><p>${esc(c.his)}</p></div>`:''}
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn ${isFav?'btn-gold':'btn-ghost'}" id="favBtn" style="flex:1">
+        ${isFav?'★ 已收藏':'☆ 收藏'}
+      </button>
+      <button class="btn btn-ghost" data-go="cards" style="flex:1">返回列表</button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   十、案例
+   ============================================================ */
+function viewCases(){
+  const filter = state.params.filter || '全部';
+  let list = CASES;
+  if(filter==='选择题型') list = list.filter(c=>c.type==='choice');
+  else if(filter==='确认题型') list = list.filter(c=>c.type==='reveal');
+  else if(filter!=='全部') list = list.filter(c=>c.category===filter);
+  const filters = ['全部','选择题型','确认题型','爱情','事业','财运'];
+  const filterHtml = filters.map(f=>
+    `<button class="chip ${f===filter?'active':''}" data-filter="${f}">${f}</button>`
+  ).join('');
+
+  const listHtml = list.length ? list.map(c=>`
+    <div class="card-item" data-go="case-detail" data-id="${c.id}">
+      <div class="card-thumb" style="font-size:16px">${c.type==='choice'?'❓':'💡'}</div>
+      <div class="card-meta">
+        <h3>${esc(c.title)}</h3>
+        <p>${esc(c.category)} · ${esc(c.spread)} · ${c.type==='choice'?'选择题型':'确认题型'}</p>
+      </div>
+    </div>
+  `).join('') : '<div class="empty"><span class="sym">❖</span>暂无案例</div>';
+
+  return `
+    <h2 class="sec">案例库</h2>
+    <div class="filters">${filterHtml}</div>
+    ${listHtml}
+  `;
+}
+
+function viewCaseDetail(){
+  const id = state.params.id;
+  const c = CASES.find(x=>x.id===id);
+  if(!c) return '<div class="empty">案例不存在</div>';
+
+  const cardsHtml = c.cards.map(x=>{
+    const card = getCard(x.id);
+    return `<div class="mini-card ${x.ori==='逆位'?'rev':''}">
+      <div class="pos">${esc(x.pos)}</div>
+      <div>${card?esc(card.name):''}</div>
+      <div style="color:var(--gold)">${esc(x.ori)}</div>
+    </div>`;
+  }).join('');
+
+  let interactHtml = '';
+  if(c.type==='choice'){
+    const answered = state.params.answered;
+    const chosen = state.params.chosen;
+    interactHtml = `<h2 class="sec">你的解读</h2>` +
+      c.options.map(o=>{
+        let cls = 'option';
+        if(answered){
+          if(o.k===c.answer) cls += ' correct';
+          else if(o.k===chosen) cls += ' wrong';
+        }
+        return `<button class="${cls}" data-opt="${o.k}" ${answered?'disabled':''}>
+          <span class="key">${o.k}</span>${esc(o.t)}
+        </button>`;
+      }).join('') +
+      (answered ? `<div class="explain">
+        <h4>${chosen===c.answer?'✓ 回答正确':'✗ 回答错误'}</h4>
+        <p><strong>正确答案：</strong>${c.answer}</p>
+        <p>${esc(c.explanation)}</p>
+        ${c.conclusion?`<p><strong>结论：</strong>${esc(c.conclusion)}</p>`:''}
+        ${c.feedback?`<p><strong>后续反馈：</strong>${esc(c.feedback)}</p>`:''}
+      </div>` : '');
+  } else {
+    const revealed = state.params.revealed;
+    interactHtml = `<h2 class="sec">先自己想一想</h2>
+      <div class="card" style="margin-bottom:14px"><p class="muted">${esc(c.prompt||'点开查看解析')}</p></div>
+      <button class="btn btn-gold" id="revealBtn" style="width:100%">${revealed?'收起解析':'查看解析'}</button>
+      ${revealed?`<div class="explain">
+        <h4>解析</h4>
+        <p>${esc(c.explanation)}</p>
+        ${c.conclusion?`<p><strong>结论：</strong>${esc(c.conclusion)}</p>`:''}
+        ${c.feedback?`<p><strong>后续反馈：</strong>${esc(c.feedback)}</p>`:''}
+      </div>`:''}`;
+  }
+
+  return `
+    <button class="back" data-go="cases">← 返回案例库</button>
+    <h2 style="color:var(--gold);font-size:17px;margin-bottom:8px">${esc(c.title)}</h2>
+    <div style="margin-bottom:6px">${c.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+    <div class="card" style="margin:14px 0">
+      <div class="detail-row"><div class="lbl">问题</div><div class="val">${esc(c.question)}</div></div>
+      <div class="detail-row"><div class="lbl">背景</div><div class="val">${esc(c.background)}</div></div>
+    </div>
+    <h2 class="sec">牌阵</h2>
+    <div class="spread-row">${cardsHtml}</div>
+    ${interactHtml}
+  `;
+}
+
+/* ============================================================
+   十一、笔记
+   ============================================================ */
+function viewNotes(){
+  const notes = store.get('notes',[]);
+  if(!notes.length){
+    return `<h2 class="sec">我的笔记</h2>
+      <div class="empty"><span class="sym">✎</span>还没有笔记<br>点击下方按钮记录你的第一个案例</div>
+      <button class="btn btn-gold" data-go="note-edit" style="width:100%;margin-top:10px">+ 新建笔记</button>`;
+  }
+  const list = notes.map(n=>`
+    <div class="note-item" data-go="note-detail" data-id="${n.id}">
+      <h3>${esc(n.title)}</h3>
+      <div class="date">${esc(n.date)}${n.spread?' · '+esc(n.spread):''}</div>
+      <div class="preview">${esc(n.myReading||n.question||'')}</div>
+      ${(n.tags||[]).length?`<div>${n.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+    </div>
+  `).join('');
+  return `<h2 class="sec">我的笔记</h2>
+    <button class="btn btn-gold" data-go="note-edit" style="width:100%;margin-bottom:14px">+ 新建笔记</button>
+    ${list}`;
+}
+
+function viewNoteEdit(){
+  const id = state.params.id;
+  const notes = store.get('notes',[]);
+  const n = id ? notes.find(x=>x.id===id) : null;
+  const edit = !!n;
+
+  return `
+    <button class="back" data-go="notes">← 返回笔记</button>
+    <h2 class="sec">${edit?'编辑笔记':'新建笔记'}</h2>
+    <div class="field"><label>标题</label>
+      <input id="nTitle" placeholder="例如：今天给自己抽的三牌阵" value="${edit?esc(n.title):''}"></div>
+    <div class="field"><label>日期</label>
+      <input id="nDate" type="date" value="${edit?esc(n.date):today()}"></div>
+    <div class="field"><label>问题</label>
+      <input id="nQuestion" placeholder="你问的问题" value="${edit?esc(n.question||''):''}"></div>
+    <div class="field"><label>牌阵</label>
+      <input id="nSpread" placeholder="例如：三牌阵 / 单牌" value="${edit?esc(n.spread||''):''}"></div>
+    <div class="field"><label>抽到的牌（用逗号分隔牌名）</label>
+      <input id="nCards" placeholder="例如：星星, 宝剑三, 愚人" value="${edit?esc((n.cards||[]).map(c=>c.name).join(', ')):''}"></div>
+    <div class="field"><label>我的解读</label>
+      <textarea id="nReading" placeholder="写下你的解读…">${edit?esc(n.myReading||''):''}</textarea></div>
+    <div class="field"><label>结论</label>
+      <textarea id="nConclusion" placeholder="你的结论…">${edit?esc(n.conclusion||''):''}</textarea></div>
+    <div class="field"><label>后续反馈</label>
+      <textarea id="nFeedback" placeholder="过段时间回来补充反馈…">${edit?esc(n.feedback||''):''}</textarea></div>
+    <div class="field"><label>标签（用逗号分隔）</label>
+      <input id="nTags" placeholder="例如：工作, 自我练习" value="${edit?esc((n.tags||[]).join(', ')):''}"></div>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="btn btn-gold" id="saveNote" style="flex:1">${edit?'保存修改':'保存笔记'}</button>
+      ${edit?'<button class="btn btn-ghost" id="delNote">删除</button>':''}
+    </div>
+  `;
+}
+
+function viewNoteDetail(){
+  const id = state.params.id;
+  const notes = store.get('notes',[]);
+  const n = notes.find(x=>x.id===id);
+  if(!n) return '<div class="empty">笔记不存在</div>';
+  const cardsHtml = (n.cards||[]).length ? `<h2 class="sec">抽到的牌</h2>
+    <div class="spread-row">${n.cards.map(c=>`<div class="mini-card"><div class="pos">${esc(c.name)}</div></div>`).join('')}</div>` : '';
+
+  return `
+    <button class="back" data-go="notes">← 返回笔记</button>
+    <h2 style="color:var(--gold);font-size:17px;margin-bottom:6px">${esc(n.title)}</h2>
+    <div class="muted" style="margin-bottom:12px">${esc(n.date)}${n.spread?' · '+esc(n.spread):''}</div>
+    ${n.question?`<div class="card" style="margin-bottom:12px"><div class="detail-row"><div class="lbl">问题</div><div class="val">${esc(n.question)}</div></div></div>`:''}
+    ${cardsHtml}
+    ${n.myReading?`<h2 class="sec">我的解读</h2><div class="card"><p style="font-size:13.5px;line-height:1.8">${esc(n.myReading)}</p></div>`:''}
+    ${n.conclusion?`<h2 class="sec">结论</h2><div class="card"><p style="font-size:13.5px;line-height:1.8">${esc(n.conclusion)}</p></div>`:''}
+    ${n.feedback?`<h2 class="sec">后续反馈</h2><div class="card"><p style="font-size:13.5px;line-height:1.8">${esc(n.feedback)}</p></div>`:''}
+    ${(n.tags||[]).length?`<div style="margin-top:12px">${n.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn btn-gold" data-go="note-edit" data-id="${n.id}" style="flex:1">编辑</button>
+      <button class="btn btn-ghost" id="delNote2" style="flex:1">删除</button>
+    </div>
+  `;
+}
+
+/* ============================================================
+   十二、我的
+   ============================================================ */
+function viewMine(){
+  const learned = store.get('learned',[]);
+  const notes = store.get('notes',[]);
+  const favCards = store.get('favCards',[]);
+
+  const favHtml = favCards.length ? favCards.map(id=>{
+    const c = getCard(id); if(!c) return '';
+    return `<div class="card-item" data-go="card-detail" data-id="${c.id}">
+      <div class="card-thumb">${c.sym}</div>
+      <div class="card-meta"><h3>${esc(c.name)}</h3><p>${esc(c.en)}</p></div>
+    </div>`;
+  }).join('') : '<div class="empty" style="padding:20px"><span class="sym">☆</span>还没有收藏</div>';
+
+  return `
+    <h2 class="sec">学习统计</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">${learned.length}</div><div class="lb">已学牌</div></div>
+      <div class="stat"><div class="num">${notes.length}</div><div class="lb">笔记</div></div>
+      <div class="stat"><div class="num">${favCards.length}</div><div class="lb">收藏</div></div>
+    </div>
+
+    <h2 class="sec">我的收藏</h2>
+    ${favHtml}
+
+    <h2 class="sec">设置</h2>
+    <div class="card">
+      <div class="detail-row" id="resetBtn" style="cursor:pointer">
+        <div class="lbl" style="color:var(--red)">重置</div>
+        <div class="val">清空所有学习数据、笔记和收藏</div>
+      </div>
+    </div>
+
+    <h2 class="sec">关于</h2>
+    <div class="card">
+      <p class="muted" style="line-height:1.9">
+        <strong style="color:var(--gold)">第七感知道</strong><br>
+        一个纯离线的塔罗学习工具。<br>
+        包含 78 张牌的正逆位解析、参考案例和笔记功能。<br>
+        所有数据保存在本地浏览器中，不上传服务器。<br><br>
+        仅供文化学习与娱乐，不构成现实决策建议。
+      </p>
+    </div>
+  `;
+}
+
+/* ============================================================
+   十三、事件绑定
+   ============================================================ */
+function bind(){
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.onclick = ()=>go(t.dataset.page);
+  });
+
+  document.querySelectorAll('[data-go]').forEach(el=>{
+    el.onclick = (e)=>{
+      e.stopPropagation();
+      const page = el.dataset.go;
+      const params = {};
+      if(el.dataset.id) params.id = isNaN(el.dataset.id)?el.dataset.id:parseInt(el.dataset.id);
+      if(el.dataset.filter) params.filter = el.dataset.filter;
+      go(page, params);
+    };
+  });
+
+  const hs = document.getElementById('homeSearch');
+  if(hs){
+    hs.onkeydown = (e)=>{
+      if(e.key==='Enter' && hs.value.trim()){
+        go('cards',{kw:hs.value.trim()});
+      }
+    };
+  }
+
+  const cs = document.getElementById('cardSearch');
+  if(cs){
+    cs.oninput = ()=>{
+      state.params.kw = cs.value;
+      clearTimeout(cs._tid);
+      cs._tid = setTimeout(()=>{
+        const app = document.getElementById('app');
+        app.innerHTML = viewCards();
+        bind();
+        const n = document.getElementById('cardSearch');
+        if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}
+      },250);
+    };
+  }
+
+  document.querySelectorAll('.chip').forEach(ch=>{
+    ch.onclick = ()=>{
+      const f = ch.dataset.filter;
+      if(state.page==='cards') go('cards',{filter:f,kw:state.params.kw||''});
+      else if(state.page==='cases') go('cases',{filter:f});
+    };
+  });
+
+  document.querySelectorAll('.ori-btn').forEach(b=>{
+    b.onclick = ()=>{
+      const id = state.params.id;
+      go('card-detail',{id,ori:b.dataset.ori});
+    };
+  });
+
+  const favBtn = document.getElementById('favBtn');
+  if(favBtn){
+    favBtn.onclick = ()=>{
+      const id = state.params.id;
+      let fav = store.get('favCards',[]);
+      if(fav.includes(id)){
+        fav = fav.filter(x=>x!==id);
+        toast('已取消收藏');
+      } else {
+        fav.push(id);
+        toast('已收藏');
+      }
+      store.set('favCards',fav);
+      render();
+    };
+  }
+
+  document.querySelectorAll('[data-opt]').forEach(b=>{
+    b.onclick = ()=>{
+      const id = state.params.id;
+      go('case-detail',{id,answered:true,chosen:b.dataset.opt});
+    };
+  });
+
+  const rb = document.getElementById('revealBtn');
+  if(rb){
+    rb.onclick = ()=>{
+      const id = state.params.id;
+      go('case-detail',{id,revealed:!state.params.revealed});
+    };
+  }
+
+  const sn = document.getElementById('saveNote');
+  if(sn){
+    sn.onclick = ()=>{
+      const title = document.getElementById('nTitle').value.trim();
+      if(!title){toast('请填写标题');return}
+      const note = {
+        id: state.params.id || ('note_'+Date.now()),
+        title,
+        date: document.getElementById('nDate').value || today(),
+        question: document.getElementById('nQuestion').value.trim(),
+        spread: document.getElementById('nSpread').value.trim(),
+        cards: document.getElementById('nCards').value.split(/[,，]/).map(s=>s.trim()).filter(Boolean).map(name=>({name})),
+        myReading: document.getElementById('nReading').value.trim(),
+        conclusion: document.getElementById('nConclusion').value.trim(),
+        feedback: document.getElementById('nFeedback').value.trim(),
+        tags: document.getElementById('nTags').value.split(/[,，]/).map(s=>s.trim()).filter(Boolean)
+      };
+      let notes = store.get('notes',[]);
+      const idx = notes.findIndex(x=>x.id===note.id);
+      if(idx>=0) notes[idx]=note; else notes.unshift(note);
+      store.set('notes',notes);
+      toast('已保存');
+      go('note-detail',{id:note.id});
+    };
+  }
+
+  const dn = document.getElementById('delNote');
+  const dn2 = document.getElementById('delNote2');
+  const doDel = ()=>{
+    if(!confirm('确定删除这条笔记？')) return;
+    const id = state.params.id;
+    let notes = store.get('notes',[]).filter(x=>x.id!==id);
+    store.set('notes',notes);
+    toast('已删除');
+    go('notes');
+  };
+  if(dn) dn.onclick = doDel;
+  if(dn2) dn2.onclick = doDel;
+
+  const rs = document.getElementById('resetBtn');
+  if(rs){
+    rs.onclick = ()=>{
+      if(!confirm('确定清空所有数据？此操作不可恢复。')) return;
+      ['learned','notes','favCards','recent'].forEach(k=>localStorage.removeItem('tarot_'+k));
+      toast('已重置');
+      go('home');
+    };
+  }
+}
+
+/* ============================================================
+   十四、启动
+   ============================================================ */
+render();
+</script>
+</body>
+</html>
