@@ -2362,9 +2362,18 @@ function viewCardDetail(){
 
     // 3. 生活化解读（随正逆位切换）
     const lifeHtml = `
-      <div class="detail-row"><div class="lbl" style="width:60px;">感情</div><div class="val">${detail.detailedLife.love[ori]}</div></div>
-      <div class="detail-row"><div class="lbl" style="width:60px;">事业</div><div class="val">${detail.detailedLife.career[ori]}</div></div>
-      <div class="detail-row"><div class="lbl" style="width:60px;">个人成长</div><div class="val">${detail.detailedLife.personalGrowth[ori]}</div></div>
+      <div style="display:flex; gap:8px; padding:12px 0; border-bottom:1px solid rgba(42,42,74,.6);">
+        <div style="flex:1; font-size:12.5px; line-height:1.6;"><span style="color:var(--gold); display:block; font-size:11px; margin-bottom:4px;">感情(正位)</span>${detail.detailedLife.love.up}</div>
+        <div style="flex:1; font-size:12.5px; line-height:1.6;"><span style="color:var(--muted); display:block; font-size:11px; margin-bottom:4px;">感情(逆位)</span>${detail.detailedLife.love.rev}</div>
+      </div>
+      <div style="display:flex; gap:8px; padding:12px 0; border-bottom:1px solid rgba(42,42,74,.6);">
+        <div style="flex:1; font-size:12.5px; line-height:1.6;"><span style="color:var(--gold); display:block; font-size:11px; margin-bottom:4px;">事业(正位)</span>${detail.detailedLife.career.up}</div>
+        <div style="flex:1; font-size:12.5px; line-height:1.6;"><span style="color:var(--muted); display:block; font-size:11px; margin-bottom:4px;">事业(逆位)</span>${detail.detailedLife.career.rev}</div>
+      </div>
+      <div style="display:flex; gap:8px; padding:12px 0;">
+        <div style="flex:1; font-size:12.5px; line-height:1.6;"><span style="color:var(--gold); display:block; font-size:11px; margin-bottom:4px;">个人成长(正位)</span>${detail.detailedLife.personalGrowth.up}</div>
+        <div style="flex:1; font-size:12.5px; line-height:1.6;"><span style="color:var(--muted); display:block; font-size:11px; margin-bottom:4px;">个人成长(逆位)</span>${detail.detailedLife.personalGrowth.rev}</div>
+      </div>
     `;
 
     // 4. 对应关系
