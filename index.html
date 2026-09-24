@@ -1333,25 +1333,3 @@ function bind(){
 /* ============================================================
    十四、启动
    ============================================================ */
-<div id="toast"></div>
-
-<script src="data.js"></script>
-<script src="cases-love.js"></script>
-<script src="cases-career.js"></script>
-<script src="cases-wealth.js"></script>
-
-<!-- ★ 2. 主逻辑脚本（放在后面）★ -->
-<script>
-  // 合并分类案例数据
-  const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
-
-  // ============================================================
-  // 你的所有主逻辑代码必须放在这里！
-  // 包括 let state = {...}、render()、viewCards()、viewCardDetail() 等等
-  // ============================================================
-
-  // 3. 最后在底部调用启动
-  render();
-</script>
-</body>
-</html>
