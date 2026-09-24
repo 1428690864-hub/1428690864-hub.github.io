@@ -1,4 +1,4 @@
-const CASES = [
+const CASE_WEALTH = [
 {
   id:"c_wealth_01",type:"reveal",title:"最近财运如何？",category:"财运",spread:"三牌阵",
   question:"案主问最近三个月的财运。",
