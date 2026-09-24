@@ -231,14 +231,6 @@ h2.sec::before{content:"";width:3px;height:14px;background:linear-gradient(var(-
 .mini-card.rev .pos{transform:rotate(180deg)}
 </style>
 </head>
-<!-- 放在 </body> 上面，主逻辑 <script> 标签的前面 -->
-<script src="data.js"></script>
-<script src="cases-love.js"></script>
-<script src="cases-career.js"></script>
-<script src="cases-wealth.js"></script>
-<script>
-  // 把所有分类合并成一个总数组，供后面的视图函数使用 
-const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
 </script>
 <body>
 
@@ -1342,6 +1334,14 @@ function bind(){
    十四、启动
    ============================================================ */
 render();
+<!-- 放在 </body> 上面，主逻辑 <script> 标签的前面 -->
+<script src="data.js"></script>
+<script src="cases-love.js"></script>
+<script src="cases-career.js"></script>
+<script src="cases-wealth.js"></script>
+<script>
+  // 把所有分类合并成一个总数组，供后面的视图函数使用 
+const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
 </script>
 </body>
 </html>
