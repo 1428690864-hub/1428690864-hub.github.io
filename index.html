@@ -828,9 +828,9 @@ function viewCards(){
    九、牌详情
    ============================================================ */
 function viewCardDetail(){
-  const id = state.params.id;
-  const c = getCard(id);
-  if(!c) return '<div class="empty">牌不存在</div>';
+  const cardData = FULL_CARDS.find(c => c.id === id); // 直接找合并后的数据
+// 如果没找到，才返回错误
+if (!cardData) return '<div class="empty">牌不存在</div>';
   
   const ori = state.params.ori || 'up';
   const fav = store.get('favCards',[]);
