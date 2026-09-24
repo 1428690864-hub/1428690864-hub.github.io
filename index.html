@@ -795,7 +795,7 @@ function viewHome(){
 function viewCards(){
   const filter = state.params.filter || '全部';
   const kw = state.params.kw || '';
-  let list = ALL_CARDS;
+  let list = FULL_CARDS;
   if(filter==='大阿卡纳') list = list.filter(c=>c.arcana==='大阿卡纳');
   else if(filter!=='全部') list = list.filter(c=>c.suit===filter);
   if(kw){
