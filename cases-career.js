@@ -1,4 +1,4 @@
-const CASE_CAREER = [
+const CASE_CAREER= [
 {
   id:"c_career_o1",type:"choice",title:"是否该换工作？",category:"事业",spread:"三牌阵",
   question:"案主问是否该换工作。",

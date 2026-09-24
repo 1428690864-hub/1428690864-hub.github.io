@@ -1,4 +1,4 @@
-const CASE_LOVE = [
+const CASE_LOVE= [
 {
   id:"c_love_01",type:"choice",title:"这段感情会怎么发展？",category:"爱情",spread:"单牌",
   question:"案主问这段感情未来三个月的发展。",
