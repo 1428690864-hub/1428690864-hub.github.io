@@ -1333,30 +1333,25 @@ function bind(){
 /* ============================================================
    十四、启动
    ============================================================ */
-render();
-<!-- 页面的可见元素到这里结束 -->
 <div id="toast"></div>
 
-<!-- ★ 外部数据引入：必须写在主逻辑 <script> 的前面！★ -->
-<script src="data.js"></script>
-
-<!-- ★ 主逻辑在这里 ★ -->
-<script>
-  // 主逻辑代码（你截图里的那部分）
-  let state = { page: 'home' };
-  function viewCardDetail() { ... }
-  // ...
-</script>
-</body>
-</html>
-</script>
-<!-- 放在 </body> 上面，主逻辑 <script> 标签的前面 -->
 <script src="data.js"></script>
 <script src="cases-love.js"></script>
 <script src="cases-career.js"></script>
 <script src="cases-wealth.js"></script>
+
+<!-- ★ 2. 主逻辑脚本（放在后面）★ -->
 <script>
-  // 把所有分类合并成一个总数组，供后面的视图函数使用 
-const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
+  // 合并分类案例数据
+  const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
+
+  // ============================================================
+  // 你的所有主逻辑代码必须放在这里！
+  // 包括 let state = {...}、render()、viewCards()、viewCardDetail() 等等
+  // ============================================================
+
+  // 3. 最后在底部调用启动
+  render();
+</script>
 </body>
 </html>
