@@ -1335,7 +1335,15 @@ function bind(){
    ============================================================ */
 
         render();
-        
+        <!-- 1. 引入外部数据文件（必须放在主逻辑上方） -->
+    <script src="data.js"></script>
+    <script src="cases-love.js"></script>
+    <script src="cases-career.js"></script>
+    <script src="cases-wealth.js"></script>
+
+    <!-- 2. 主逻辑（你的所有渲染函数和业务逻辑） -->
+    <script>
+        // ... 主逻辑代码 ...
     </script>
 </body>
 </html>
