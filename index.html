@@ -1340,21 +1340,6 @@ function bind(){
     <script src="cases-love.js"></script>
     <script src="cases-career.js"></script>
     <script src="cases-wealth.js"></script>
-
-    <!-- 2. 主逻辑（你的所有渲染函数和业务逻辑） -->
-    <script>
-    // ================== 数据合并区 ==================
-// 1. 合并案例数据（把三个数组拼成一个）
-const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
-
-// 2. 合并牌库数据（基础卡牌信息 + 详细牌义）
-// 假设基础数据变量叫 ALL_CARDS，详细数据是 CARD_DETAILS
-const FULL_CARDS = ALL_CARDS.map(card => {
-    const detail = (typeof CARD_DETAILS !== 'undefined' && CARD_DETAILS[card.id]) ? CARD_DETAILS[card.id] : {};
-    // 用展开运算符合并，详细数据覆盖基础数据
-    return { ...card, ...detail };
-});
-        // ... 主逻辑代码 ...
     </script>
 </body>
 </html>
