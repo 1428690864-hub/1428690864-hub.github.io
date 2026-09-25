@@ -246,8 +246,16 @@ h2.sec::before{content:"";width:3px;height:14px;background:linear-gradient(var(-
 </nav>
 
 <div id="toast"></div>
-
+<!-- ★ 引入外部数据文件（顺序不能错，必须放在主逻辑上方） ★ -->
+<script src="data.js"></script>
+<script src="cases-love.js"></script>
+<script src="cases-career.js"></script>
+<script src="cases-wealth.js"></script>
 <script>
+// ============================================================
+    // 合并案例数据（把三个外部文件的内容拼在一起）
+    // ============================================================
+    const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
 /* ============================================================
    一、大阿卡纳数据（22张）
    ============================================================ */
@@ -795,7 +803,7 @@ function viewHome(){
 function viewCards(){
   const filter = state.params.filter || '全部';
   const kw = state.params.kw || '';
-  let list = FULL_CARDS;
+  let list = ALL_CARDS;
   if(filter==='大阿卡纳') list = list.filter(c=>c.arcana==='大阿卡纳');
   else if(filter!=='全部') list = list.filter(c=>c.suit===filter);
   if(kw){
@@ -828,9 +836,9 @@ function viewCards(){
    九、牌详情
    ============================================================ */
 function viewCardDetail(){
-  const cardData = FULL_CARDS.find(c => c.id === id); // 直接找合并后的数据
-// 如果没找到，才返回错误
-if (!cardData) return '<div class="empty">牌不存在</div>';
+  const id = state.params.id;
+  const c = getCard(id);
+  if(!c) return '<div class="empty">牌不存在</div>';
   
   const ori = state.params.ori || 'up';
   const fav = store.get('favCards',[]);
@@ -1335,15 +1343,6 @@ function bind(){
    ============================================================ */
 
         render();
-        <!-- 1. 引入外部数据文件（必须放在主逻辑上方） -->
-    <script src="data.js"></script>
-    <script src="cases-love.js"></script>
-    <script src="cases-career.js"></script>
-    <script src="cases-wealth.js"></script>
-
-    <!-- 2. 主逻辑（你的所有渲染函数和业务逻辑） -->
-    <script>
-        // ... 主逻辑代码 ...
     </script>
 </body>
 </html>
