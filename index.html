@@ -248,11 +248,20 @@ h2.sec::before{content:"";width:3px;height:14px;background:linear-gradient(var(-
 <script src="cases-love.js"></script>
 <script src="cases-career.js"></script>
 <script src="cases-wealth.js"></script>
+<script src="knowledge-journey.js"></script>
+<script src="knowledge-origin.js"></script>
+<script src="knowledge-reading.js"></script>
+<script src="spreads.js"></script>
 <script>
 // ============================================================
     // 合并案例数据（把三个外部文件的内容拼在一起）
     // ============================================================
     const CASES = [...CASE_LOVE, ...CASE_CAREER, ...CASE_WEALTH];
+    const KNOWLEDGE_DATA = {
+  journey: KNOWLEDGE_JOURNEY,
+  origin: KNOWLEDGE_ORIGIN,
+  reading: KNOWLEDGE_READING
+};
 /* ============================================================
    一、大阿卡纳数据（22张）
    ============================================================ */
@@ -3460,6 +3469,11 @@ function render(){
   else if(p==='card-detail') app.innerHTML = viewCardDetail();
   else if(p==='cases') app.innerHTML = viewCases();
   else if(p==='case-detail') app.innerHTML = viewCaseDetail();
+  else if(p==='knowledge') app.innerHTML = viewKnowledge();
+  else if(p==='knowledge-detail') app.innerHTML = viewKnowledgeDetail();
+ else if(p === 'spreads') app.innerHTML = viewSpreads();
+  else if(p === 'spread-detail') app.innerHTML = viewSpreadDetail();
+  else if(p==='spreads') app.innerHTML = viewSpreads();
   else if(p==='notes') app.innerHTML = viewNotes();
   else if(p==='note-edit') app.innerHTML = viewNoteEdit();
   else if(p==='note-detail') app.innerHTML = viewNoteDetail();
@@ -3537,6 +3551,8 @@ function viewHome(){
       <div class="entry" data-go="cards" data-filter="圣杯"><span class="sym">💧</span><span class="nm">圣杯</span></div>
       <div class="entry" data-go="cards" data-filter="宝剑"><span class="sym">⚔️</span><span class="nm">宝剑</span></div>
       <div class="entry" data-go="cards" data-filter="星币"><span class="sym">🪙</span><span class="nm">星币</span></div>
+      <div class="entry" data-go="knowledge"><span class="sym">📖</span><span class="nm">塔罗常识</span></div>
+      <div class="entry" data-go="spreads"><span class="sym">📐</span><span class="nm">牌阵大全</span></div>
       <div class="entry" data-go="cases"><span class="sym">❖</span><span class="nm">案例库</span></div>
     </div>
 
@@ -3723,6 +3739,83 @@ function viewCardDetail(){
   `;
 }
 
+/* ============================================================
+   视图：塔罗常识（首页）
+   ============================================================ */
+function viewKnowledge() {
+  // 把三个外部文件的数据转换成列表，自动生成目录
+  const listHtml = Object.values(KNOWLEDGE_DATA).map(item => `
+    <div class="card-item" data-go="knowledge-detail" data-id="${item.id || item.title}">
+      <div class="card-thumb" style="font-size:16px">📖</div>
+      <div class="card-meta">
+        <h3>${esc(item.title)}</h3>
+        <p>点击查看详情</p>
+      </div>
+    </div>
+  `).join('');
+  
+  return `
+    <button class="back" data-go="home">← 返回首页</button>
+    <h2 class="sec">塔罗常识</h2>
+    ${listHtml}
+  `;
+}
+
+/* ============================================================
+   视图：塔罗常识（详情页）
+   ============================================================ */
+function viewKnowledgeDetail() {
+  const id = state.params.id; // 拿到点击的是哪一篇
+  const data = KNOWLEDGE_DATA[id];
+  
+  if (!data) return '<div class="empty">内容不存在</div>';
+  
+  return `
+    <button class="back" data-go="knowledge">← 返回塔罗常识</button>
+    <h2 style="color:var(--gold);font-size:18px;margin-bottom:12px;">${esc(data.title)}</h2>
+    <div class="card" style="line-height:1.8;font-size:14px;">
+      ${data.content}
+    </div>
+  `;
+}
+/* ============================================================
+   视图：牌阵大全（列表页）
+   ============================================================ */
+function viewSpreads() {
+  const listHtml = SPREADS_DATA.map(item => `
+    <div class="card-item" data-go="spread-detail" data-id="${item.id}">
+      <div class="card-thumb" style="font-size:16px">📐</div>
+      <div class="card-meta">
+        <h3>${esc(item.title)}</h3>
+        <p>${esc(item.desc || '点击查看详情')}</p>
+      </div>
+    </div>
+  `).join('');
+  
+  return `
+    <button class="back" data-go="home">← 返回首页</button>
+    <h2 class="sec">牌阵大全</h2>
+    ${listHtml}
+  `;
+}
+
+/* ============================================================
+   视图：牌阵大全（详情页）
+   ============================================================ */
+function viewSpreadDetail() {
+  const id = state.params.id;
+  const data = SPREADS_DATA.find(x => x.id === id);
+  
+  if (!data) return '<div class="empty">牌阵不存在</div>';
+  
+  return `
+    <button class="back" data-go="spreads">← 返回牌阵大全</button>
+    <h2 style="color:var(--gold);font-size:18px;margin-bottom:12px;">${esc(data.title)}</h2>
+    <div class="card" style="line-height:1.8;font-size:14px;">
+      ${data.content}
+    </div>
+  `;
+}
 /* ============================================================
    十、案例
    ============================================================ */
